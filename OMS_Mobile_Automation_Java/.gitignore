@@ -1,0 +1,14 @@
+# Maven target directory
+target/
+*.class
+
+# Eclipse metadata and preferences
+.settings/
+*.snap
+*.markers
+.metadata/
+
+# Log and temporary files
+*.log
+screenshots/
+*.png
