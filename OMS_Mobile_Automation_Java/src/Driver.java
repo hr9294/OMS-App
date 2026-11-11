@@ -1,7 +1,10 @@
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.time.Duration;
+import java.util.Properties;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
@@ -16,13 +19,46 @@ import io.appium.java_client.android.options.UiAutomator2Options;
 
 public class Driver {
 
-    // --- Configuration Constants ---
-    public static final String APPIUM_SERVER_URL = "http://127.0.0.1:4723";
-    public static final String APP_PACKAGE = "com.quantbd.oms";
-    public static final String APP_ACTIVITY = ".ui.login.LoginActivity";
-    public static final String DEFAULT_USER_CODE = "53196";
-    public static final String DEFAULT_PASSWORD = "12345";
-    public static final int TIMEOUT_SECONDS = 20;
+    // --- Configuration Constants (Can be overridden by local.properties) ---
+    public static String APPIUM_SERVER_URL = "http://127.0.0.1:4723";
+    public static String APP_PACKAGE = "com.quantbd.oms";
+    public static String APP_ACTIVITY = ".ui.login.LoginActivity";
+    public static String DEFAULT_USER_CODE = "53196";
+    public static String DEFAULT_PASSWORD = "12345";
+    public static int TIMEOUT_SECONDS = 20;
+
+    static {
+        loadLocalProperties();
+    }
+
+    private static void loadLocalProperties() {
+        Properties prop = new Properties();
+        try {
+            File localFile = new File("local.properties");
+            if (localFile.exists()) {
+                try (FileInputStream fis = new FileInputStream(localFile)) {
+                    prop.load(fis);
+                    System.out.println("[CONFIG] Loaded settings from local.properties");
+                }
+            } else {
+                InputStream is = Driver.class.getResourceAsStream("/local.properties");
+                if (is != null) {
+                    prop.load(is);
+                    System.out.println("[CONFIG] Loaded settings from classpath local.properties");
+                }
+            }
+
+            if (prop.getProperty("appium.server.url") != null) APPIUM_SERVER_URL = prop.getProperty("appium.server.url").trim();
+            if (prop.getProperty("app.package") != null) APP_PACKAGE = prop.getProperty("app.package").trim();
+            if (prop.getProperty("app.activity") != null) APP_ACTIVITY = prop.getProperty("app.activity").trim();
+            if (prop.getProperty("user.code") != null) DEFAULT_USER_CODE = prop.getProperty("user.code").trim();
+            if (prop.getProperty("user.password") != null) DEFAULT_PASSWORD = prop.getProperty("user.password").trim();
+            if (prop.getProperty("timeout.seconds") != null) TIMEOUT_SECONDS = Integer.parseInt(prop.getProperty("timeout.seconds").trim());
+
+        } catch (Exception e) {
+            System.out.println("[CONFIG] Using default configuration.");
+        }
+    }
 
     public static AndroidDriver initDriver() {
         try {

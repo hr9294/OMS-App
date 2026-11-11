@@ -1,0 +1,13 @@
+{
+  "appium_server_url": "http://127.0.0.1:4723",
+  "platform_name": "Android",
+  "automation_name": "UiAutomator2",
+  "device_name": "Android Device",
+  "app_package": "com.quantbd.oms",
+  "app_activity": ".ui.login.LoginActivity",
+  "user_code": "53196",
+  "password": "12345",
+  "timeout_seconds": 20,
+  "test_symbol": "ABBANK",
+  "test_exchange": "DSE"
+}
