@@ -3,26 +3,30 @@ import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.io.FileHandler;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 
-public class OMSMobile_Driver {
+public class Driver {
 
     // --- Configuration Constants ---
     public static final String APPIUM_SERVER_URL = "http://127.0.0.1:4723";
     public static final String APP_PACKAGE = "com.quantbd.oms";
     public static final String APP_ACTIVITY = ".ui.login.LoginActivity";
-    public static final String DEFAULT_USERNAME = "Testadmin";
+    public static final String DEFAULT_USER_CODE = "53196";
     public static final String DEFAULT_PASSWORD = "12345";
     public static final int TIMEOUT_SECONDS = 20;
 
     public static AndroidDriver initDriver() {
         try {
-            System.out.println("[DRIVER] Initializing UiAutomator2 for Android...");
+            System.out.println("[DRIVER] Starting UiAutomator2 Android Driver for UFT FAST OMS...");
             UiAutomator2Options options = new UiAutomator2Options()
                     .setPlatformName("Android")
                     .setAutomationName("UiAutomator2")
@@ -32,10 +36,9 @@ public class OMSMobile_Driver {
                     .setNoReset(false)
                     .setAutoGrantPermissions(true);
 
-            System.out.println("[DRIVER] Connecting to Appium at " + APPIUM_SERVER_URL + "...");
             AndroidDriver driver = new AndroidDriver(URI.create(APPIUM_SERVER_URL).toURL(), options);
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-            System.out.println("[DRIVER] Mobile driver connected successfully.");
+            System.out.println("[DRIVER] App launched and session established.");
             return driver;
         } catch (Exception e) {
             System.err.println("[DRIVER ERROR] " + e.getMessage());
@@ -43,10 +46,20 @@ public class OMSMobile_Driver {
         }
     }
 
-    public static void takeScreenshot(AndroidDriver drv, String filename) {
-        if (drv == null) return;
+    public static WebElement waitForVisibility(AndroidDriver driver, By locator) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_SECONDS));
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    public static WebElement waitForClickable(AndroidDriver driver, By locator) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT_SECONDS));
+        return wait.until(ExpectedConditions.elementToBeClickable(locator));
+    }
+
+    public static void takeScreenshot(AndroidDriver driver, String filename) {
+        if (driver == null) return;
         try {
-            File src = ((TakesScreenshot) drv).getScreenshotAs(OutputType.FILE);
+            File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
             File dest = new File(filename);
             FileHandler.copy(src, dest);
             System.out.println("[SCREENSHOT] Saved: " + dest.getAbsolutePath());
@@ -55,10 +68,10 @@ public class OMSMobile_Driver {
         }
     }
 
-    public static void quitDriver(AndroidDriver drv) {
-        if (drv != null) {
-            System.out.println("[DRIVER] Closing mobile session...");
-            drv.quit();
+    public static void quitDriver(AndroidDriver driver) {
+        if (driver != null) {
+            System.out.println("[DRIVER] Closing Appium driver session...");
+            driver.quit();
         }
     }
 }
