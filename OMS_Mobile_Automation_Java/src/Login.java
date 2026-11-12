@@ -16,24 +16,30 @@ public class Login {
 
         // 1. Enter Client Code / Username (Screenshot 1: 53196)
         System.out.println("[LOGIN] Entering Client Code / Username: " + userCode);
-        WebElement userInput = Driver.waitForVisibility(driver,
-            AppiumBy.xpath("//android.widget.EditText[contains(@resource-id, 'username') or contains(@resource-id, 'client_code') or @index='0']")
-        );
-        userInput.clear();
-        userInput.sendKeys(userCode);
+        try {
+            WebElement userInput = Driver.waitForVisibility(driver,
+                AppiumBy.xpath("//android.widget.EditText[not(@password='true')] | //android.widget.ImageView[@clickable='true' and not(@password='true')]")
+            );
+            userInput.click();
+            userInput.clear();
+            userInput.sendKeys(userCode);
+        } catch (Exception e) {
+            System.out.println("[LOGIN] Username field note: " + e.getMessage());
+        }
 
         // 2. Enter Password (Screenshot 1: 12345)
         System.out.println("[LOGIN] Entering Password...");
-        WebElement passInput = driver.findElement(
-            AppiumBy.xpath("//android.widget.EditText[contains(@resource-id, 'password') or @password='true']")
+        WebElement passInput = Driver.waitForVisibility(driver,
+            AppiumBy.xpath("//android.widget.EditText[@password='true' or contains(@resource-id, 'password')]")
         );
+        passInput.click();
         passInput.clear();
         passInput.sendKeys(password);
 
         // 3. Optional: Ensure 'Remember me' is checked
         try {
             WebElement rememberMe = driver.findElement(
-                AppiumBy.xpath("//android.widget.CheckBox | //*[contains(@text, 'Remember me')]")
+                AppiumBy.xpath("//*[@content-desc='Remember me'] | //android.widget.CheckBox | //*[contains(@text, 'Remember me')]")
             );
             if (!"true".equalsIgnoreCase(rememberMe.getAttribute("checked"))) {
                 rememberMe.click();
@@ -43,7 +49,7 @@ public class Login {
         // 4. Click 'Sign in' Button (Screenshot 1)
         System.out.println("[LOGIN] Tapping 'Sign in' button...");
         WebElement signInBtn = Driver.waitForClickable(driver,
-            AppiumBy.xpath("//android.widget.Button[normalize-space(@text)='Sign in'] | //*[contains(@text, 'Sign in')]")
+            AppiumBy.xpath("//*[@content-desc='Sign in'] | //android.widget.Button[normalize-space(@text)='Sign in'] | //*[contains(@text, 'Sign in')]")
         );
         signInBtn.click();
 
