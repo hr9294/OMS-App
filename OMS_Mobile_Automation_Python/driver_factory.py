@@ -13,7 +13,7 @@ def create_driver() -> webdriver.Remote:
     options.device_name = "Android Device"
     options.app_package = config.APP_PACKAGE
     options.app_activity = config.APP_ACTIVITY
-    options.no_reset = False
+    options.no_reset = config.NO_RESET
     options.auto_grant_permissions = True
 
     print(f"[DRIVER] Connecting to Appium at {config.APPIUM_SERVER_URL}...")

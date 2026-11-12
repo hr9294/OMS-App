@@ -5,6 +5,7 @@
   "device_name": "Android Device",
   "app_package": "com.uftcl.uftfast.staging",
   "app_activity": "com.uftcl.uftfast.MainActivity",
+  "no_reset": true,
   "user_code": "53196",
   "password": "12345",
   "timeout_seconds": 20,

@@ -21,8 +21,9 @@ public class Driver {
 
     // --- Configuration Constants (Can be overridden by local.properties) ---
     public static String APPIUM_SERVER_URL = "http://127.0.0.1:4723";
-    public static String APP_PACKAGE = "com.quantbd.oms";
-    public static String APP_ACTIVITY = ".ui.login.LoginActivity";
+    public static String APP_PACKAGE = "com.uftcl.uftfast.staging";
+    public static String APP_ACTIVITY = "com.uftcl.uftfast.MainActivity";
+    public static boolean NO_RESET = true;
     public static String DEFAULT_USER_CODE = "53196";
     public static String DEFAULT_PASSWORD = "12345";
     public static int TIMEOUT_SECONDS = 20;
@@ -51,6 +52,8 @@ public class Driver {
             if (prop.getProperty("appium.server.url") != null) APPIUM_SERVER_URL = prop.getProperty("appium.server.url").trim();
             if (prop.getProperty("app.package") != null) APP_PACKAGE = prop.getProperty("app.package").trim();
             if (prop.getProperty("app.activity") != null) APP_ACTIVITY = prop.getProperty("app.activity").trim();
+            if (prop.getProperty("app.noReset") != null) NO_RESET = Boolean.parseBoolean(prop.getProperty("app.noReset").trim());
+            if (prop.getProperty("app.no.reset") != null) NO_RESET = Boolean.parseBoolean(prop.getProperty("app.no.reset").trim());
             if (prop.getProperty("user.code") != null) DEFAULT_USER_CODE = prop.getProperty("user.code").trim();
             if (prop.getProperty("user.password") != null) DEFAULT_PASSWORD = prop.getProperty("user.password").trim();
             if (prop.getProperty("timeout.seconds") != null) TIMEOUT_SECONDS = Integer.parseInt(prop.getProperty("timeout.seconds").trim());
@@ -69,7 +72,7 @@ public class Driver {
                     .setDeviceName("Android Device")
                     .setAppPackage(APP_PACKAGE)
                     .setAppActivity(APP_ACTIVITY)
-                    .setNoReset(false)
+                    .setNoReset(NO_RESET)
                     .setAutoGrantPermissions(true);
 
             AndroidDriver driver = new AndroidDriver(URI.create(APPIUM_SERVER_URL).toURL(), options);

@@ -5,8 +5,9 @@ CONFIG_FILE = os.path.join(os.path.dirname(__file__), "local_config.json")
 
 # Default values
 APPIUM_SERVER_URL = "http://127.0.0.1:4723"
-APP_PACKAGE = "com.quantbd.oms"
-APP_ACTIVITY = ".ui.login.LoginActivity"
+APP_PACKAGE = "com.uftcl.uftfast.staging"
+APP_ACTIVITY = "com.uftcl.uftfast.MainActivity"
+NO_RESET = True
 DEFAULT_USER_CODE = "53196"
 DEFAULT_PASSWORD = "12345"
 EXPLICIT_WAIT = 20
@@ -20,6 +21,7 @@ if os.path.exists(CONFIG_FILE):
             APPIUM_SERVER_URL = data.get("appium_server_url", APPIUM_SERVER_URL)
             APP_PACKAGE = data.get("app_package", APP_PACKAGE)
             APP_ACTIVITY = data.get("app_activity", APP_ACTIVITY)
+            NO_RESET = data.get("no_reset", NO_RESET)
             DEFAULT_USER_CODE = data.get("user_code", DEFAULT_USER_CODE)
             DEFAULT_PASSWORD = data.get("password", DEFAULT_PASSWORD)
             EXPLICIT_WAIT = data.get("timeout_seconds", EXPLICIT_WAIT)
